@@ -1,0 +1,554 @@
+< !DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><title>F1 Pinterest Style Animation</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><style> :root {
+    --bg-top: #060717;
+    --bg-bottom: #020308;
+    --road: #141622;
+    --road-edge: #1f2233;
+    --line: #f5f5f588;
+    --f1-main: #ff1744;
+    --f1-accent: #ffdd35;
+    --f1-dark: #14151e;
+    --neon: #ff1744;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, #14172a 0, #020308 65%);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+.frame {
+    position: relative;
+    width: min(900px, 100vw);
+    height: min(520px, 75vh);
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.9);
+    isolation: isolate;
+}
+
+/* tiny camera shake */
+.frame-inner {
+    position: absolute;
+    inset: 0;
+    animation: camShake 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes camShake {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-1px, 1px);
+    }
+
+    100% {
+        transform: translate(1px, -1px);
+    }
+}
+
+/* distant gradient “city” */
+.sky {
+    position: absolute;
+    inset: 0 0 45% 0;
+    background:
+        radial-gradient(circle at 10% 10%, #ffffff0f 0, transparent 60%),
+        radial-gradient(circle at 90% 15%, #ff17441a 0, transparent 55%),
+        linear-gradient(to bottom, #14172b, transparent 80%);
+    pointer-events: none;
+}
+
+/* scrolling buildings as silhouettes */
+.buildings-strip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 52%;
+    height: 18%;
+    overflow: hidden;
+    opacity: 0.6;
+}
+
+.buildings {
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(to right,
+            #050711 0,
+            #050711 30px,
+            #15182b 30px,
+            #15182b 55px);
+    transform-origin: left center;
+    animation: bgScroll 8s linear infinite;
+}
+
+@keyframes bgScroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* speed lines in the sky */
+.speed-lines {
+    position: absolute;
+    inset: 10% 0 60% 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.speed-line {
+    position: absolute;
+    height: 2px;
+    width: 160px;
+    background: linear-gradient(to right, transparent, #ffffffaa, transparent);
+    opacity: 0.7;
+    filter: blur(0.5px);
+    animation: speedLine 0.9s linear infinite;
+}
+
+.speed-line:nth-child(1) {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.speed-line:nth-child(2) {
+    top: 30%;
+    left: 60%;
+    animation-delay: -0.2s;
+}
+
+.speed-line:nth-child(3) {
+    top: 50%;
+    left: 30%;
+    animation-delay: -0.4s;
+}
+
+.speed-line:nth-child(4) {
+    top: 70%;
+    left: 80%;
+    animation-delay: -0.1s;
+}
+
+@keyframes speedLine {
+    from {
+        transform: translateX(40%);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.8;
+    }
+
+    80% {
+        opacity: 0.8;
+    }
+
+    to {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+}
+
+/* road */
+.road {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background:
+        linear-gradient(to top, #05050b 0, #050712 40%, transparent 90%),
+        linear-gradient(to right, #05050b 0, #141622 20%, #141622 80%, #05050b 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.road-inner {
+    position: relative;
+    width: 140%;
+    height: 100%;
+    transform-origin: center bottom;
+    transform: perspective(700px) rotateX(64deg);
+    background: radial-gradient(circle at top, #1a1e30 0, #05050b 70%);
+    overflow: hidden;
+}
+
+/* road center lines */
+.road-lines {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 8%;
+    height: 100%;
+    transform: translateX(-50%);
+    background-image: repeating-linear-gradient(to bottom,
+            transparent 0,
+            transparent 26px,
+            var(--line) 26px,
+            var(--line) 46px);
+    animation: roadDash 0.35s linear infinite;
+}
+
+@keyframes roadDash {
+    from {
+        transform: translate(-50%, 0);
+    }
+
+    to {
+        transform: translate(-50%, 30px);
+    }
+}
+
+/* road edges */
+.road-edge {
+    position: absolute;
+    top: 0;
+    width: 3%;
+    height: 100%;
+    background-image: repeating-linear-gradient(to bottom,
+            #fffb 0,
+            #fffb 22px,
+            transparent 22px,
+            transparent 40px);
+    opacity: 0.8;
+    animation: roadDash 0.4s linear infinite;
+}
+
+.road-edge.left {
+    left: 25%;
+}
+
+.road-edge.right {
+    right: 25%;
+}
+
+/* ------- CAR WRAPPER ------- */
+.car-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.car-wrapper {
+    position: relative;
+    transform: translateY(-6%);
+    animation: carFloat 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes carFloat {
+    from {
+        transform: translateY(-6%);
+    }
+
+    to {
+        transform: translateY(-2%);
+    }
+}
+
+.car-glow {
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 260px;
+    height: 32px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(255, 23, 68, 0.8), transparent 70%);
+    filter: blur(4px);
+    opacity: 0.9;
+}
+
+/* ------- F1 CAR (SIDE VIEW) ------- */
+.car {
+    position: relative;
+    width: 360px;
+    height: 120px;
+}
+
+/* rear wing */
+.rear-wing {
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    width: 60px;
+    height: 60px;
+}
+
+.rear-wing-main {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 58px;
+    height: 26px;
+    background: linear-gradient(180deg, #1a1b25, #0a0a0f);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
+}
+
+.rear-wing-endplate {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    height: 40px;
+    background: #0a0a10;
+    border-radius: 6px;
+}
+
+/* main body */
+.body-main {
+    position: absolute;
+    left: 40px;
+    right: 20px;
+    bottom: 34px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--f1-main), #ff4569);
+    border-radius: 40px;
+    box-shadow:
+        0 0 18px rgba(255, 23, 68, 0.7),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* engine cover “shark fin” */
+.engine-cover {
+    position: absolute;
+    right: 60px;
+    bottom: 60px;
+    width: 70px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--f1-main), #ff5b7b);
+    border-radius: 26px 26px 4px 4px;
+}
+
+.engine-cover:before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    width: 50px;
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ffffff55, transparent);
+    opacity: 0.9;
+}
+
+/* sidepod */
+.sidepod {
+    position: absolute;
+    left: 120px;
+    bottom: 34px;
+    width: 90px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--f1-accent), #ffe982);
+    border-radius: 18px;
+    box-shadow: 0 0 14px rgba(255, 221, 53, 0.7);
+}
+
+/* cockpit & halo */
+.cockpit {
+    position: absolute;
+    left: 150px;
+    bottom: 66px;
+    width: 80px;
+    height: 32px;
+    background: linear-gradient(135deg, #0f1018, #292c3d);
+    border-radius: 20px 28px 12px 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.halo {
+    position: absolute;
+    left: 152px;
+    bottom: 86px;
+    width: 78px;
+    height: 14px;
+    border-radius: 999px;
+    border: 3px solid #d7dde3;
+    border-bottom: none;
+    box-shadow: 0 0 6px rgba(215, 221, 227, 0.9);
+}
+
+.halo-pillar {
+    position: absolute;
+    left: 188px;
+    bottom: 66px;
+    width: 10px;
+    height: 24px;
+    border-radius: 999px;
+    background: #cfd3dd;
+}
+
+/* nose + front wing */
+.nose {
+    position: absolute;
+    left: 0;
+    bottom: 40px;
+    width: 120px;
+    height: 28px;
+    background: linear-gradient(90deg, #ff6280, var(--f1-main));
+    border-radius: 26px 8px 6px 6px;
+}
+
+.front-wing {
+    position: absolute;
+    left: 0;
+    bottom: 26px;
+    width: 110px;
+    height: 18px;
+    background: linear-gradient(0deg, #14151f, #2c3040);
+    border-radius: 14px 18px 6px 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
+}
+
+.front-flap {
+    position: absolute;
+    left: -8px;
+    bottom: 18px;
+    width: 120px;
+    height: 10px;
+    background: linear-gradient(0deg, #222637, #414759);
+    border-radius: 16px 18px 6px 6px;
+}
+
+/* wheels */
+.wheel {
+    position: absolute;
+    bottom: 0;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #444, #050505 60%);
+    border: 6px solid #111;
+    box-shadow:
+        0 0 20px rgba(0, 0, 0, 1),
+        0 0 10px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    animation: wheelSpin 0.5s linear infinite;
+}
+
+.wheel::before {
+    content: "";
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    border: 3px solid #bbb;
+}
+
+.wheel::after {
+    content: "";
+    position: absolute;
+    inset: 34%;
+    border-radius: 50%;
+    background:
+        conic-gradient(from 0deg, #d3d7e3 0 10%, #555b6f 10% 20%, #d3d7e3 20% 30%, #555b6f 30% 40%, #d3d7e3 40% 50%, #555b6f 50% 60%, #d3d7e3 60% 70%, #555b6f 70% 80%, #d3d7e3 80% 90%, #555b6f 90% 100%);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.wheel-front {
+    left: 92px;
+}
+
+.wheel-rear {
+    right: 42px;
+}
+
+@keyframes wheelSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* HUD text (like Pinterest overlay) */
+.hud {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.hud-main {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+}
+
+.hud-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #ffffff12;
+    border: 1px solid #ffffff20;
+    backdrop-filter: blur(12px);
+    font-size: 0.7rem;
+    margin-top: 6px;
+}
+
+.hud-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--neon);
+    box-shadow: 0 0 10px rgba(255, 23, 68, 0.9);
+}
+
+/* bottom right label like Pinterest “tag” */
+.tag {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #ffffff10;
+    border: 1px solid #ffffff25;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* responsive */
+@media (max-width: 600px) {
+    .frame {
+        border-radius: 18px;
+    }
+
+    .car {
+        width: 280px;
+        height: 96px;
+    }
+
+    .hud-main {
+        font-size: 1rem;
+    }
+}
+
+</style></head><body><div class="frame"><div class="frame-inner"><div class="sky"></div><div class="buildings-strip"><div class="buildings"></div></div><div class="speed-lines"><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div></div><div class="hud"><div class="hud-main">F1 • NIGHT SPRINT</div><div>High speed visual</div><div class="hud-pill"><span class="hud-dot"></span><span>Turbo mode active</span></div></div><div class="road"><div class="road-inner"><div class="road-lines"></div><div class="road-edge left"></div><div class="road-edge right"></div></div></div><div class="car-layer"><div class="car-wrapper"><div class="car"><div class="rear-wing"><div class="rear-wing-main"></div><div class="rear-wing-endplate"></div></div><div class="body-main"></div><div class="engine-cover"></div><div class="sidepod"></div><div class="cockpit"></div><div class="halo"></div><div class="halo-pillar"></div><div class="nose"></div><div class="front-wing"></div><div class="front-flap"></div><div class="wheel wheel-front"></div><div class="wheel wheel-rear"></div><div class="car-glow"></div></div></div></div><div class="tag">Formula 1 • UI Motion</div></div></div></body></html>
