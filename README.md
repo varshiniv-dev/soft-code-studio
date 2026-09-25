@@ -54,16 +54,3 @@ Let creativity and curiosity lead the way.
 
 
 ---
-
-Rock–Paper–Scissors (Python)- 
->A tiny console game where you choose Rock, Paper, or Scissors and challenge Python.
-Built using simple condition logic, enums, and random choices.
->python "RPS_game.py"
-
----
-
-Hogwarts House Quiz (Python Console Game)-
->A simple quiz that assigns you to a Hogwarts house based on your answers.
-Players respond to personality-based questions, and each choice increases house points.
-At the end, the house with the highest score is revealed!
->python "House_scores.py"
